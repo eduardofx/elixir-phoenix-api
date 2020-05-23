@@ -11,15 +11,12 @@ defmodule Admin.CreateAdmin do
     |> cast(params, [:name, :email, :password])
     |> validate_require([:name, :email, :password])
     |> put_password()
+    |> IO.inspect()
   end
 
-  defp put_password(charset) do
-    case %Ecto.Changeset{valid?: true} do
-      true -> 
-        put_change(charset, :password_hash, Bcrypt.hash_pwd_salt(get_change(change_set, :password)))
-      
-      false ->
-        change_set       
-    end
+  defp put_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    put_change(changeset, :password_hash, Bcrypt.hash_pwd_salt(password))
   end
+
+  defp put_password(changeset), do: changeset
 end
