@@ -19,5 +19,5 @@ To start your Phoenix server:
   * Start Phoenix endpoint with `mix phx.server`
   * Create Module `mix phx.gen.schema Admin administrators name email password`
   * Create tables `mix ecto.create`
-  * Create tables `mix ecto.migrate`
+  * Migrate tables `mix ecto.migrate`
   * Console app `iex -S mix` (Need install nmake. On windows set to path variable "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64")
