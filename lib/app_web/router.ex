@@ -5,17 +5,24 @@ defmodule AppWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", AppWeb do
-    pipe_through :api
+  pipeline :api_as_admin do
+    plug :accepts, ["json"]
+    plug AppWeb.AuthAccessPipeline
   end
 
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
+  scope "/api/v1", AppWeb do
+    pipe_through :api
+
+    post("/admin/sign_in", Admin.SessionController, :create)
+  end
+
+  scope "/api/v1", AppWeb do
+    pipe_through :api_as_admin
+
+    resources("/elections", Admin.ElectionController, only: [:index, :create, :update])
+    post("/uploads", Admin.UploadController, :create)
+  end
+
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 

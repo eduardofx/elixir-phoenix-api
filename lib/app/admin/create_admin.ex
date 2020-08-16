@@ -1,17 +1,18 @@
-defmodule Admin.CreateAdmin do
+defmodule App.CreateAdmin do
   @moduledoc """
-  Create Admin
+  Creating a new admin
   """
+
   import Ecto.Changeset
 
-  alias App.Admin
-  
+  alias App.{Admin, Repo}
+
   def run(params) do
     %Admin{}
     |> cast(params, [:name, :email, :password])
-    |> validate_require([:name, :email, :password])
+    |> validate_required([:name, :email, :password])
     |> put_password()
-    |> IO.inspect()
+    |> Repo.insert()
   end
 
   defp put_password(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
